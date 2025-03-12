@@ -188,26 +188,38 @@ class ResultScreen extends StatelessWidget {
                               SizedBox(
                                 height: size.height * 0.01,
                               ),
-                              InkWell(
-                                onTap: () {
-                                  context.read<CartBloc>().add(AddToCart(item));
+                              BlocBuilder<CartBloc, CartState>(
+                                builder: (context, state) {
+                                  final isInCart = state.cartItems.contains(item); // Check if item is in cart
+
+                                  return InkWell(
+                                    onTap: () {
+                                      if (isInCart) {
+                                        context.read<CartBloc>().add(RemoveFromCart(item));
+                                      } else {
+                                        context.read<CartBloc>().add(AddToCart(item));
+                                      }
+                                    },
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      width: size.width * 0.2,
+                                      height: size.height * 0.04,
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.only(
+                                          bottomRight: Radius.circular(3),
+                                          topLeft: Radius.circular(8),
+                                        ),
+                                        color: isInCart ? Colors.red : AppColor.kLightTealColor, // Change color for remove button
+                                      ),
+                                      child: Icon(
+                                        isInCart ? Icons.remove_shopping_cart : Icons.add_shopping_cart_sharp, // Change icon
+                                        color: AppColor.kWhiteColor,
+                                      ),
+                                    ),
+                                  );
                                 },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: size.width * 0.2,
-                                  height: size.height * 0.04,
-                                  decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                        bottomRight: Radius.circular(3),
-                                        topLeft: Radius.circular(8)),
-                                    color: AppColor.kLightTealColor,
-                                  ),
-                                  child: const Icon(
-                                    Icons.add_shopping_cart_sharp,
-                                    color: AppColor.kWhiteColor,
-                                  ),
-                                ),
                               )
+
                             ],
                           ),
                         ],

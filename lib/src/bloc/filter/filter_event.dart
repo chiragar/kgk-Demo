@@ -7,12 +7,13 @@ abstract class FilterEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SelectShape extends FilterEvent {
-  final String shape;
-  const SelectShape(this.shape);
+class SelectStoneShape extends FilterEvent {
+  final StoneShape stoneShape;
+
+  const SelectStoneShape(this.stoneShape);
 
   @override
-  List<Object> get props => [shape];
+  List<Object?> get props => [stoneShape];
 }
 
 class ToggleColor extends FilterEvent {

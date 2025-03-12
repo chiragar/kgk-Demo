@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kgk/src/bloc/filter/filter_bloc.dart';
-import 'package:kgk/src/data/model/data.dart';
+import 'package:kgk/src/data/model/stone_shape.dart';
 import 'package:kgk/src/data/model/datas.dart';
 import 'package:kgk/src/data/model/static/data_static.dart';
 import 'package:kgk/src/ui/screen/cart_screen.dart';
 import 'package:kgk/src/ui/widget/custom_gradient_button.dart';
 import 'package:kgk/src/ui/widget/custom_horizontal_listview.dart';
-import 'package:kgk/src/ui/widget/custom_single_horizontal_listview.dart';
 
 import 'result_screen.dart';
 
@@ -37,17 +36,64 @@ class FilterScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             BlocBuilder<FilterBloc, FilterState>(
-              builder: (context, state) {
-                return CustomSingleHorizontalListView<String>(
-                  title: "Select Shape",
-                  items: shapeList, // Example list
-                  selectedItem: state.selectedShape,
-                  onSelected: (shape) {
-                    context.read<FilterBloc>().add(SelectShape(shape));
-                  },
-                );
-              },
-            ),
+                builder: (context, state) {
+                  return SizedBox(
+                    height: 200,
+                    child: GridView.builder(
+                        padding: EdgeInsets.zero,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 5, // Number of columns in the grid
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 3, // Adjust based on your UI needs
+                        ),
+                        itemCount: stoneShapeData.length,
+                        shrinkWrap: true,
+
+                        itemBuilder: (context, index) {
+                          final stoneShape = stoneShapeData[index];
+                          final isSelected = state.selectedStoneShape?.id == stoneShape.id;
+
+                          return GestureDetector(
+                            onTap: () {
+                              context.read<FilterBloc>().add(SelectStoneShape(stoneShape));
+                            },
+                            child: Container(
+                              alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                            color: isSelected ? Colors.blue : Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                          color: isSelected ? Colors.blueAccent : Colors.grey,
+                          width: 2,
+                          ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  spreadRadius: 1,
+                                )
+                              ],),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                            stoneShape.stoneImage != null && stoneShape.stoneImage!.isNotEmpty
+                                ? Image.network(stoneShape.stoneImage!, height: 50) // Display image if available
+                                : Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                            SizedBox(height: 5),
+                            Text(
+                              stoneShape.stoneName ?? "No Name",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: isSelected ? Colors.white : Colors.black,
+                              ),
+                            ),
+                          ],)
+                            ),
+                          );
+                        }
+                    ),
+                  );}),
             CustomHorizontalListView(
               title: "Select Clarity",
               listtype: clarityList,

@@ -3,17 +3,22 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:kgk/src/data/model/data.dart';
+import 'package:kgk/src/data/model/stone_shape.dart';
 part 'filter_event.dart';
 part 'filter_state.dart';
 
 class FilterBloc extends Bloc<FilterEvent, FilterState> {
   FilterBloc() : super(const FilterState()) {
-    on<SelectShape>(_onSelectShape);
+    on<SelectStoneShape>(_onSelectStoneShape);
     on<ToggleColor>(_onToggleColor);
     on<SelectedClarity>(_onSelectedClarity);
     on<SelectedLab>(_onSelectedLab);
     on<ApplyFilter>(_onApplyFilter);
     on<ApplySorting>(_onApplySorting);
+  }
+
+  FutureOr<void> _onSelectStoneShape(SelectStoneShape event, Emitter<FilterState> emit) {
+    emit(state.copyWith(selectedStoneShape: event.stoneShape));
   }
 
   FutureOr<void> _onToggleColor(ToggleColor event, Emitter<FilterState> emit) {
@@ -41,8 +46,9 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
 
   FutureOr<void> _onApplyFilter(ApplyFilter event, Emitter<FilterState> emit) {
     final filteredItems = event.items.where((item) {
-      final shapeMatches =
-          state.selectedShape == null || item.shape == state.selectedShape;
+      final shapeMatches = state.selectedStoneShape == null ||
+          item.shape == state.selectedStoneShape!.stoneName; // Compare stone name
+
       final colorMatches = state.selectedColors.isEmpty ||
           state.selectedColors.contains(item.color);
 
@@ -56,9 +62,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
     emit(state.copyWith(filteredItems: filteredItems));
   }
 
-  FutureOr<void> _onSelectShape(SelectShape event, Emitter<FilterState> emit) {
-    emit(state.copyWith(selectedShape: event.shape));
-  }
+
 
   FutureOr<void> _onApplySorting(
       ApplySorting event, Emitter<FilterState> emit) {

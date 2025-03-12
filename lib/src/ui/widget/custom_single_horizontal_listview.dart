@@ -7,7 +7,7 @@ class CustomSingleHorizontalListView<T> extends StatelessWidget {
   final List<T> items;
   final T? selectedItem;
   final void Function(T) onSelected;
-  final int crossAxisCount; // Number of items per row
+  final int crossAxisCount;  // Number of items per row
 
   const CustomSingleHorizontalListView({
     Key? key,
@@ -15,29 +15,24 @@ class CustomSingleHorizontalListView<T> extends StatelessWidget {
     required this.items,
     required this.selectedItem,
     required this.onSelected,
-    this.crossAxisCount = 5, // Default to 3 items per row
+    this.crossAxisCount = 2,  // Default to 3 items per row
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.sizeOf(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CustomTitleTextWidget(
-          title: title,
-        ),
+        CustomTitleTextWidget(title: title),
         const SizedBox(height: 10),
         GridView.builder(
-          shrinkWrap: true, // Ensures GridView doesn't take full screen
-          physics:
-              const NeverScrollableScrollPhysics(), // Prevents scrolling inside the GridView
+          shrinkWrap: true,  // Ensures GridView doesn't take full screen
+          physics: const NeverScrollableScrollPhysics(),  // Prevents scrolling inside the GridView
           itemCount: items.length,
           padding: EdgeInsets.zero,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
             childAspectRatio: 2,
-            crossAxisSpacing: 12, // Adjust based on UI needs
+            crossAxisSpacing: 12,  // Adjust based on UI needs
           ),
           itemBuilder: (context, index) {
             final item = items[index];
@@ -60,17 +55,20 @@ class CustomSingleHorizontalListView<T> extends StatelessWidget {
                       blurRadius: 2,
                       offset: Offset(0, 1),
                       spreadRadius: 0,
-                    )
+                    ),
                   ],
                 ),
-                child: Text(item.toString(),
-                    style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        color: isSelected
-                            ? AppColor.kWhiteColor
-                            : AppColor.kGrayText,
-                        fontSize: 14,
-                        fontFamily: "SFProDisplay")),
+                child: Text(
+                  item.toString(),  // You can update this to display specific properties of your item
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: isSelected
+                        ? AppColor.kWhiteColor
+                        : AppColor.kGrayText,
+                    fontSize: 14,
+                    fontFamily: "SFProDisplay",
+                  ),
+                ),
               ),
             );
           },
