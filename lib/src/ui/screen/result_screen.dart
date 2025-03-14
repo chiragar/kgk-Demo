@@ -13,7 +13,7 @@ class ResultScreen extends StatelessWidget {
     var size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Filtered Results"),
+        title:  const Text("Results"),
         actions: [
           DropdownButton<SortOption>(
             underline: const SizedBox(),

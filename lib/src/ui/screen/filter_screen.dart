@@ -6,6 +6,7 @@ import 'package:kgk/src/core/constant/app_navigation.dart';
 import 'package:kgk/src/core/constant/app_textstyle.dart';
 import 'package:kgk/src/data/model/datas.dart';
 import 'package:kgk/src/data/model/static/data_static.dart';
+import 'package:kgk/src/data/model/stone_shape.dart';
 import 'package:kgk/src/ui/screen/cart_screen.dart';
 import 'package:kgk/src/ui/screen/result_screen.dart';
 import 'package:kgk/src/ui/widget/custom_gradient_button.dart';
@@ -27,7 +28,7 @@ class FilterScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: () =>
-              AppNavigation.pushTo(CartScreen()),
+              AppNavigation.pushTo(const CartScreen()),
           )
         ],
       ),
@@ -41,60 +42,34 @@ class FilterScreen extends StatelessWidget {
                   builder: (context, state) {
                     return SizedBox(
                       height: MediaQuery.sizeOf(context).height * 0.3,
-                      child: GridView.builder(
-                          padding: EdgeInsets.zero,
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5, // Number of columns in the grid
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 3, // Adjust based on your UI needs
-                          ),
-                          itemCount: stoneShapeData.length,
-                          shrinkWrap: true,
-        
-                          itemBuilder: (context, index) {
-                            final stoneShape = stoneShapeData[index];
-                            final isSelected = state.selectedStoneShape?.id == stoneShape.id;
-        
-                            return GestureDetector(
-                              onTap: () {
-                                context.read<FilterBloc>().add(SelectStoneShape(stoneShape));
-                              },
-                              child: Container(
-                                alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                              color: isSelected ? Colors.blue : Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                            color: isSelected ? Colors.blueAccent : Colors.grey,
-                            width: 2,
-                            ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 4,
-                                    spreadRadius: 1,
-                                  )
-                                ],),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: (stoneShapeData.length / 2).ceil(), // Ensuring all items are included
+                        itemBuilder: (context, index) {
+                          int firstIndex = index * 2;
+                          int secondIndex = firstIndex + 1;
+
+                          final firstStoneShape = stoneShapeData[firstIndex];
+                          final isSelectedFirst = state.selectedStoneShape?.id == firstStoneShape.id;
+
+                          final bool hasSecond = secondIndex < stoneShapeData.length;
+                          final secondStoneShape = hasSecond ? stoneShapeData[secondIndex] : null;
+                          final isSelectedSecond = secondStoneShape != null &&
+                              state.selectedStoneShape?.id == secondStoneShape.id;
+
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 8),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                              stoneShape.stoneImage != null && stoneShape.stoneImage!.isNotEmpty
-                                  ? Image.network(stoneShape.stoneImage!, height: 50) // Display image if available
-                                  : Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
-                              SizedBox(height: 5),
-                              Text(
-                                stoneShape.stoneName ?? "No Name",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: isSelected ? Colors.white : Colors.black,
-                                ),
-                              ),
-                            ],)
-                              ),
-                            );
-                          }
-                      ),
+                                buildStoneItem(context, firstStoneShape, isSelectedFirst),
+                                SizedBox(height: 4),
+                                if (hasSecond) buildStoneItem(context, secondStoneShape!, isSelectedSecond),
+                              ],
+                            ),
+                          );
+                        },
+                      )
                     );}),
         
               _buildSizeInputRow(context),
@@ -164,7 +139,7 @@ class FilterScreen extends StatelessWidget {
               decoration: const BoxDecoration(
                 gradient: AppColor.buttonGradient
               ),
-              child:  Text("Add Filter Size", style: AppTextStyle.ts20(color: AppColor.kWhiteColor))),
+              child:  Text("+", textAlign: TextAlign.center,style: AppTextStyle.ts20(color: AppColor.kWhiteColor))),
         ),
       ],
     );
@@ -219,7 +194,7 @@ class FilterScreen extends StatelessWidget {
               );
             },
           ),
-        ):SizedBox.shrink();
+        ):const SizedBox.shrink();
       },
     );
   }
@@ -235,4 +210,48 @@ class FilterScreen extends StatelessWidget {
     );
   }
 
+  Widget buildStoneItem(BuildContext context, StoneShape stoneShape, bool isSelected) {
+    var size=MediaQuery.sizeOf(context);
+    return GestureDetector(
+      onTap: () {
+        context.read<FilterBloc>().add(SelectStoneShape(stoneShape)); // Ensure BlocProvider is above
+      },
+      child: Container(
+        width:size.width*0.2, // Adjust width based on your UI
+        padding: EdgeInsets.all(8),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue : Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? Colors.blueAccent : Colors.grey,
+            width: 2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4,
+              spreadRadius: 1,
+            )
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            stoneShape.stoneImage != null && stoneShape.stoneImage!.isNotEmpty
+                ? Image.asset(stoneShape.stoneImage!,height: size.width*0.15,   fit: BoxFit.contain)
+                : Icon(Icons.image_not_supported, size: size.width*0.15, color: Colors.grey),
+            SizedBox(height: 5),
+            Text(
+              stoneShape.stoneName ?? "No Name",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: isSelected ? Colors.white : Colors.black,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

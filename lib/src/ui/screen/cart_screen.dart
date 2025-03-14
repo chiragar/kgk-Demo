@@ -163,7 +163,7 @@ class CartScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.only(
                                         bottomRight: Radius.circular(3),
                                         topLeft: Radius.circular(8)),
-                                    color: AppColor.kLightTealColor,
+                                    color: AppColor.appBarColor,
                                   ),
                                   child: const Icon(
                                     Icons.remove_shopping_cart_sharp,
