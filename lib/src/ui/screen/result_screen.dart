@@ -15,41 +15,31 @@ class ResultScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Filtered Results"),
         actions: [
-          Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(10)),
-              child: DropdownButton<SortOption>(
-                underline: const SizedBox(),
-                value: context.read<FilterBloc>().state.sortOption,
-                icon: const Icon(Icons.sort, color: Colors.black),
-                dropdownColor: Colors.white,
-                onChanged: (SortOption? newValue) {
-                  if (newValue != null) {
-                    context.read<FilterBloc>().add(ApplySorting(newValue));
-                  }
-                },
-                items: const [
-                  DropdownMenuItem(
-                      value: SortOption.priceAsc,
-                      child: Text("Final Price Asc")),
-                  DropdownMenuItem(
-                      value: SortOption.priceDesc,
-                      child: Text("Final Price Desc")),
-                  DropdownMenuItem(
-                      value: SortOption.caratAsc,
-                      child: Text("Carat Weight Asc")),
-                  DropdownMenuItem(
-                      value: SortOption.caratDesc,
-                      child: Text("Carat Weight Desc")),
-                ],
-              )),
+          DropdownButton<SortOption>(
+            underline: const SizedBox(),
+            value: context.watch<FilterBloc>().state.sortOption, // Use watch instead of read
+            icon: const Icon(Icons.sort, color: AppColor.kWhiteColor),
+            dropdownColor: AppColor.appBarColor,
+            style: const TextStyle(color: AppColor.kWhiteColor),
+            onChanged: (SortOption? newValue) {
+              if (newValue != null) {
+                context.read<FilterBloc>().add(ApplySorting(newValue));
+              }
+            },
+            items: const [
+              DropdownMenuItem(value: SortOption.priceAsc, child: Text("Final Price Asc")),
+              DropdownMenuItem(value: SortOption.priceDesc, child: Text("Final Price Desc")),
+              DropdownMenuItem(value: SortOption.caratAsc, child: Text("Carat Weight Asc")),
+              DropdownMenuItem(value: SortOption.caratDesc, child: Text("Carat Weight Desc")),
+            ],
+          ),
+
           IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => CartScreen()),
+                MaterialPageRoute(builder: (context) => const CartScreen()),
               );
             },
           )

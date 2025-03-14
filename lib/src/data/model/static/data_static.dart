@@ -1,5 +1,5 @@
 // final List<String> shapeList = ["BR", "CU", "OV", "RAD"];
-import 'package:kgk/src/core/app_assets.dart';
+import 'package:kgk/src/core/constant/app_assets.dart';
 import 'package:kgk/src/data/model/stone_shape.dart';
 
 List<StoneShape> stoneShapeData = [

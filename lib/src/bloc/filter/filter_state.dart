@@ -9,6 +9,7 @@ enum SortOption {
 
 class FilterState extends Equatable {
   final StoneShape? selectedStoneShape;
+  final List<String> sizeRanges;
   final List<String> selectedColors;
   final List<String> selectedClarity;
   final List<String> selectedLab;
@@ -17,6 +18,7 @@ class FilterState extends Equatable {
 
   const FilterState({
     this.selectedStoneShape,
+    this.sizeRanges=const[],
     this.selectedColors = const [],
     this.selectedClarity = const [],
     this.selectedLab = const [],
@@ -26,6 +28,7 @@ class FilterState extends Equatable {
 
   FilterState copyWith({
     StoneShape? selectedStoneShape,
+    List<String>? sizeRanges,
     List<String>? selectedColors,
     List<String>? selectedClarity,
     List<String>? selectedLab,
@@ -34,6 +37,7 @@ class FilterState extends Equatable {
   }) {
     return FilterState(
       selectedStoneShape: selectedStoneShape ?? this.selectedStoneShape,
+      sizeRanges: sizeRanges ?? this.sizeRanges,
       selectedColors: selectedColors ?? this.selectedColors,
       selectedClarity: selectedClarity ?? this.selectedClarity,
       selectedLab: selectedLab ?? this.selectedLab,
@@ -44,7 +48,7 @@ class FilterState extends Equatable {
 
   @override
   List<Object?> get props => [
-
+    sizeRanges,
     selectedStoneShape,
         selectedColors,
         selectedClarity,

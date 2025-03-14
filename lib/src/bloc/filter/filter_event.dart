@@ -15,6 +15,20 @@ class SelectStoneShape extends FilterEvent {
   @override
   List<Object?> get props => [stoneShape];
 }
+class AddSizeRange extends FilterEvent {
+  final String minSize;
+  final String maxSize;
+
+  AddSizeRange({required this.minSize, required this.maxSize});
+
+  @override
+  List<Object?> get props => [minSize, maxSize];
+}
+
+class RemoveSizeRange extends FilterEvent {
+  final int index;
+  RemoveSizeRange(this.index);
+}
 
 class ToggleColor extends FilterEvent {
   final String color;

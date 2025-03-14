@@ -19,6 +19,15 @@ class AppColor {
   static const Color drawerBgColor = Color(0xFFFEF4F4);
   static const Color appBarColor = Color(0xFFEC3237);
   static const Color drawerTextColor = Color(0xFF101828);
+
+  static const Color borderColor = Color(0xFFA2ACBD);
+  static const Color focusBorderColor = Color(0xFF2B72EC);
+  static const Color errorBorderColor = Color(0xFFEF0101);
+
+  //Text Style Color
+  static const Color hintTextColor = Color(0xFFC7C7C9);
+  static const Color errorTextColor = Color(0xFFEF0101);
+
   static const LinearGradient buttonGradient = LinearGradient(
     begin: Alignment.centerLeft, stops: [
     0.3,
